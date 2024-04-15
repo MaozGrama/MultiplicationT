@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiplication Table</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    label {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    select, button {
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    table {
+        margin: 0 auto;
+        border-collapse: collapse;
+    }
+
+    td, th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    td {
+        background-color: #fff;
+    }
+
+    .highlight {
+        background-color: #ffa500 !important;
+    }
+
+    .result {
+        background-color: #8ACFFB;
+        transition: background-color 0.5s;
+    }
+
+    .result:hover {
+        background-color: #8ACFFB;
+    }
+</style>
+</head>
+<body>
+
+<h2>Interactive Multiplication Table</h2>
+
+<label for="num">Select a number:</label>
+<select id="num">
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="15">15</option>
+    <option value="20">20</option>
+</select>
+
+<button onclick="generateTable()">Generate Table</button>
+
+<br><br>
+
+<table id="multiplicationTable">
+</table>
+
+<script>
+let selectedCells = [];
+
+function generateTable() {
+    // Get the selected number from the dropdown
+    let selectedNumber = parseInt(document.getElementById("num").value);
+
+    // Get the table element
+    let table = document.getElementById("multiplicationTable");
+
+    // Clear previous table content
+    table.innerHTML = '';
+
+    // Create table rows and columns
+    for (let i = 1; i <= selectedNumber; i++) {
+        // Create a table row
+        let row = document.createElement("tr");
+
+        for (let j = 1; j <= selectedNumber; j++) {
+            // Create a table cell
+            let cell = document.createElement("td");
+
+            // Set the text content
+            cell.textContent = i * j;
+
+            // Add event listeners for mouse hover and click
+            cell.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('result')) {
+                    this.classList.add('highlight');
+                }
+            });
+
+            cell.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('result') && !selectedCells.includes(this)) {
+                    this.classList.remove('highlight');
+                }
+            });
+
+            cell.addEventListener('click', function() {
+                if (selectedCells.length === 2) {
+                    selectedCells.forEach(cell => {
+                        cell.classList.remove('highlight');
+                        cell.classList.remove('result');
+                    });
+                    selectedCells = [];
+                }
+                selectedCells.push(this);
+                this.classList.add('highlight');
+                highlightProduct();
+            });
+
+            // Append cell to row
+            row.appendChild(cell);
+        }
+
+        // Append row to table
+        table.appendChild(row);
+    }
+}
+
+function highlightProduct() {
+    if (selectedCells.length === 2) {
+        let product = parseInt(selectedCells[0].textContent) * parseInt(selectedCells[1].textContent);
+        selectedCells.forEach(cell => {
+            cell.classList.add('result');
+            cell.classList.remove('highlight');
+        });
+        alert("Product: " + product);
+    }
+}
+</script>
+
+</body>
+</html>
